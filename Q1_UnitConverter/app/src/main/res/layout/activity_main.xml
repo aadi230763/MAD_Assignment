@@ -7,31 +7,36 @@
     android:gravity="center"
     android:background="@android:color/white">
 
+    <!-- Input field for users to enter a numerical value -->
     <EditText
         android:id="@+id/inputValue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Value"
-        android:inputType="numberDecimal"
-        android:padding="10dp"/>
+        android:hint="Enter Value"  <!-- Placeholder text inside the input field -->
+    android:inputType="numberDecimal"  <!-- Ensures only numeric decimal input -->
+    android:padding="10dp"/>
 
+    <!-- Dropdown menu (Spinner) for selecting the 'From' unit -->
     <Spinner
         android:id="@+id/fromUnit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <!-- Label to indicate conversion direction -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="To"
-        android:layout_gravity="center"
-        android:padding="10dp"/>
+        android:text="To"  <!-- Static text between the two spinners -->
+    android:layout_gravity="center"
+    android:padding="10dp"/>
 
+    <!-- Dropdown menu (Spinner) for selecting the 'To' unit -->
     <Spinner
         android:id="@+id/toUnit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <!-- TextView to display the converted result -->
     <TextView
         android:id="@+id/resultText"
         android:layout_width="match_parent"
@@ -39,8 +44,9 @@
         android:textSize="18sp"
         android:textColor="@android:color/holo_blue_dark"
         android:padding="10dp"
-        android:text="Converted Value: "/>
+        android:text="Converted Value: "/>  <!-- Default text before conversion -->
 
+    <!-- Button to trigger unit conversion -->
     <Button
         android:id="@+id/convertButton"
         android:layout_width="match_parent"
