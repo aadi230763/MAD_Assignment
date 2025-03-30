@@ -28,10 +28,14 @@ public class MainActivity extends AppCompatActivity {
         resultText = findViewById(R.id.resultText);
         convertButton = findViewById(R.id.convertButton);
 
+
         // Setting up the dropdown menus (spinners) with unit options
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, units);
         fromUnit.setAdapter(adapter);
         toUnit.setAdapter(adapter);
+
+
 
         // Setting up the conversion button's click event
         convertButton.setOnClickListener(new View.OnClickListener() {
@@ -42,15 +46,21 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
     // Function to handle unit conversion
     private void convertUnits() {
         String input = inputValue.getText().toString(); // Get user input
+
+
 
         // Check if input is empty and show a message if needed
         if (input.isEmpty()) {
             Toast.makeText(this, "Please enter a value", Toast.LENGTH_SHORT).show();
             return;
         }
+
+
 
         double value = Double.parseDouble(input); // Convert input to a numeric value
         String from = fromUnit.getSelectedItem().toString(); // Get selected 'from' unit
@@ -65,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         // Display the result
         resultText.setText("Converted Value: " + convertedValue + " " + to);
     }
+
+
 
     // Function to convert input value to a base unit (centimeters)
     private double convertToBaseUnit(double value, String unit) {
@@ -83,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
                 return 0; // Default case (should not happen)
         }
     }
+
+
 
     // Function to convert base unit (centimeters) to the desired unit
     private double convertFromBaseUnit(double baseValue, String unit) {
