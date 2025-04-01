@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:gravity="center"
-    android:background="@android:color/white">
+    android:gravity="center">
+
 
     <!-- Input field for users to enter a numerical value -->
     <EditText
@@ -30,11 +30,14 @@
         android:layout_gravity="center"
         android:padding="10dp"/>
 
+
+
     <!-- Dropdown menu (Spinner) for selecting the 'To' unit -->
     <Spinner
         android:id="@+id/toUnit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
 
     <!-- TextView to display the converted result -->
     <TextView
@@ -42,11 +45,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:textColor="@android:color/holo_blue_dark"
+        android:textColor="?android:attr/textColorPrimary"
         android:padding="10dp"
         android:text="Converted Value: "/>
 
+
+
     <!-- Button to trigger unit conversion -->
+
     <Button
         android:id="@+id/convertButton"
         android:layout_width="match_parent"

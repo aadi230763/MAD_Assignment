@@ -11,9 +11,12 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    // UI components for theme selection and saving preference
     private RadioGroup themeGroup;
     private RadioButton lightThemeButton, darkThemeButton;
     private Button saveButton;
+
+    // SharedPreferences to store theme selection
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -27,45 +30,48 @@ public class SettingsActivity extends AppCompatActivity {
         darkThemeButton = findViewById(R.id.darkThemeButton);
         saveButton = findViewById(R.id.saveButton);
 
-        // Initialize SharedPreferences to store theme selection
+        // Initialize SharedPreferences to store and retrieve theme selection
         sharedPreferences = getSharedPreferences("AppSettings", MODE_PRIVATE);
 
-        // Check current theme setting and select the appropriate radio button
+        // Retrieve the currently saved theme mode
         int currentTheme = sharedPreferences.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+
+        // Set the selected radio button based on the saved theme mode
         if (currentTheme == AppCompatDelegate.MODE_NIGHT_YES) {
-            darkThemeButton.setChecked(true);
+            darkThemeButton.setChecked(true); // Dark theme is selected
         } else {
-            lightThemeButton.setChecked(true);
+            lightThemeButton.setChecked(true); // Light theme is selected
         }
 
         // Set up save button click listener
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveThemeSelection();
+                saveThemeSelection(); // Call function to save the selected theme
             }
         });
     }
 
+    // Function to save the selected theme
     private void saveThemeSelection() {
         int themeMode;
 
-        // Determine which theme was selected
+        // Determine which theme was selected by the user
         if (darkThemeButton.isChecked()) {
-            themeMode = AppCompatDelegate.MODE_NIGHT_YES;
+            themeMode = AppCompatDelegate.MODE_NIGHT_YES; // Set dark mode
         } else {
-            themeMode = AppCompatDelegate.MODE_NIGHT_NO;
+            themeMode = AppCompatDelegate.MODE_NIGHT_NO; // Set light mode
         }
 
-        // Save the selection to SharedPreferences
+        // Store the selected theme mode in SharedPreferences
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("theme_mode", themeMode);
         editor.apply();
 
-        // Apply the theme change
+        // Apply the selected theme globally
         AppCompatDelegate.setDefaultNightMode(themeMode);
 
-        // Recreate the activity to apply changes
+        // Recreate the activity to apply the theme change immediately
         recreate();
     }
 }
