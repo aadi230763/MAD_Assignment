@@ -3,13 +3,12 @@ package com.example.cameragallery;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -20,6 +19,8 @@ import java.util.List;
 
 public class GalleryActivity extends AppCompatActivity implements ImageAdapter.OnImageClickListener {
     private static final String TAG = "GalleryActivity";
+    private static final int REQUEST_IMAGE_DETAILS = 201;
+
     private RecyclerView recyclerView;
     private ImageAdapter adapter;
     private List<ImageItem> imageList;
@@ -126,15 +127,25 @@ public class GalleryActivity extends AppCompatActivity implements ImageAdapter.O
     public void onImageClick(ImageItem image) {
         try {
             Intent intent = new Intent(this, ImageDetailsActivity.class);
-            intent.putExtra("image_uri", image.getUri());
-            intent.putExtra("image_name", image.getName());
-            intent.putExtra("image_size", image.getSize());
-            intent.putExtra("image_date", image.getDate());
-            intent.putExtra("folder_uri", folderUri.toString());
-            startActivity(intent);
+            intent.putExtra("imageUri", image.getUri());
+            intent.putExtra("imageName", image.getName());
+            intent.putExtra("imagePath", image.getPath());
+            intent.putExtra("imageSize", image.getSize());
+            intent.putExtra("imageDate", image.getDate());
+            startActivityForResult(intent, REQUEST_IMAGE_DETAILS);
         } catch (Exception e) {
             Log.e(TAG, "Error opening image details: " + e.getMessage(), e);
             Toast.makeText(this, "Failed to open image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_DETAILS && resultCode == RESULT_OK) {
+            // Refresh the image list after deletion
+            loadImagesFromFolder();
+            Toast.makeText(this, "Gallery refreshed", Toast.LENGTH_SHORT).show();
         }
     }
 
