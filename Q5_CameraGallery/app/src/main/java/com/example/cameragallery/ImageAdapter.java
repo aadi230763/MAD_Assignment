@@ -2,6 +2,7 @@ package com.example.cameragallery;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
+    private static final String TAG = "ImageAdapter";
     private final Context context;
     private final List<ImageItem> imageList;
     private final OnImageClickListener listener;
@@ -39,16 +43,28 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
         ImageItem item = imageList.get(position);
-        Glide.with(context)
-                .load(Uri.parse(item.getUri()))
-                .centerCrop()
-                .into(holder.imageView);
+        try {
+            Uri imageUri = Uri.parse(item.getUri());
+            Log.d(TAG, "Loading image: " + imageUri);
 
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onImageClick(item);
-            }
-        });
+            RequestOptions requestOptions = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_launcher_background); // Replace with your placeholder
+
+            Glide.with(context)
+                    .load(imageUri)
+                    .apply(requestOptions)
+                    .into(holder.imageView);
+
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onImageClick(item);
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Error loading image at position " + position + ": " + e.getMessage());
+        }
     }
 
     @Override

@@ -114,7 +114,7 @@ public class ImageDetailsActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             Log.e(TAG, "Error deleting image: " + e.getMessage(), e);
-            Toast.makeText(this, "Error deleting image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error deleting image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

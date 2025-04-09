@@ -21,9 +21,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.documentfile.provider.DocumentFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -261,9 +265,61 @@ public class MainActivity extends AppCompatActivity {
 
             case REQUEST_CAPTURE_IMAGE:
                 if (currentPhotoPath != null) {
-                    Toast.makeText(this, "Photo saved: " + currentPhotoPath, Toast.LENGTH_SHORT).show();
+                    saveImageToSelectedFolder();
                 }
                 break;
+        }
+    }
+
+    // New method to save captured image to selected folder
+    private void saveImageToSelectedFolder() {
+        if (saveFolderUri == null) {
+            Toast.makeText(this, "No folder selected to save images", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            File sourceFile = new File(currentPhotoPath);
+            String fileName = sourceFile.getName();
+
+            DocumentFile pickedDir = DocumentFile.fromTreeUri(this, saveFolderUri);
+            if (pickedDir == null) {
+                Toast.makeText(this, "Cannot access selected folder", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Create a new file in the selected directory
+            DocumentFile newFile = pickedDir.createFile("image/jpeg", fileName);
+            if (newFile == null) {
+                Toast.makeText(this, "Failed to create file in the selected folder", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Copy file content
+            try (InputStream in = new FileInputStream(sourceFile);
+                 OutputStream out = getContentResolver().openOutputStream(newFile.getUri())) {
+
+                if (out == null) {
+                    Toast.makeText(this, "Failed to open output stream", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = in.read(buffer)) > 0) {
+                    out.write(buffer, 0, length);
+                }
+
+                Toast.makeText(this, "Photo saved to selected folder", Toast.LENGTH_SHORT).show();
+
+                // Delete the temporary file
+                if (!sourceFile.delete()) {
+                    Log.w(TAG, "Failed to delete temporary file");
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error saving image to selected folder: " + e.getMessage(), e);
+            Toast.makeText(this, "Failed to save photo to selected folder", Toast.LENGTH_SHORT).show();
         }
     }
 }

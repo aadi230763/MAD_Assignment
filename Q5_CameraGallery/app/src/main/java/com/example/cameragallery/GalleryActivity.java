@@ -83,12 +83,16 @@ public class GalleryActivity extends AppCompatActivity implements ImageAdapter.O
                 }
 
                 List<ImageItem> tempList = new ArrayList<>();
-                for (DocumentFile file : directory.listFiles()) {
+                DocumentFile[] files = directory.listFiles();
+                Log.d(TAG, "Found " + files.length + " files in directory");
+
+                for (DocumentFile file : files) {
                     if (file.isFile() && isImageFile(file.getName())) {
+                        Log.d(TAG, "Adding image: " + file.getName());
                         tempList.add(new ImageItem(
                                 file.getUri().toString(),
                                 file.getName(),
-                                file.getUri().toString(),
+                                file.getUri().getPath(),
                                 file.length(),
                                 file.lastModified()
                         ));
@@ -100,10 +104,14 @@ public class GalleryActivity extends AppCompatActivity implements ImageAdapter.O
                     imageList.addAll(tempList);
                     adapter.notifyDataSetChanged();
                     tvEmpty.setVisibility(imageList.isEmpty() ? View.VISIBLE : View.GONE);
+                    if (imageList.isEmpty()) {
+                        tvEmpty.setText("No images found in this folder");
+                    }
+                    Log.d(TAG, "Gallery updated with " + imageList.size() + " images");
                 });
             } catch (Exception e) {
                 Log.e(TAG, "Error loading images: " + e.getMessage(), e);
-                runOnUiThread(() -> showErrorAndFinish("Error loading images"));
+                runOnUiThread(() -> showErrorAndFinish("Error loading images: " + e.getMessage()));
             }
         }).start();
     }
