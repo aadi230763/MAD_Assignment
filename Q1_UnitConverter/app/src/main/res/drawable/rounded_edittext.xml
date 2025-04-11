@@ -1,0 +1,16 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Light grey background color -->
+    <solid android:color="#EFEFEF"/>
+
+    <!-- Smooth, rounded corners (12dp curve) -->
+    <corners android:radius="12dp"/>
+
+    <!-- Adds some space inside the box so the text doesn't touch the edges -->
+    <padding
+        android:left="10dp"
+        android:top="10dp"
+        android:right="10dp"
+        android:bottom="10dp"/>
+</shape>
